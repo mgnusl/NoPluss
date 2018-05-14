@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<style>
+		body {
+			width: 300px;
+			padding: 5px 30px;
+			color: #404040;
+		}
+
+		.emph {
+			color: #e74c3c;
+			font-weight: bold;
+		}
+
+		button {
+			display: inline-block;
+			background: #0C342A;
+			border: 0;
+			padding: 0.5em 1em;
+			color: #fff;
+			font-weight: bold;
+			transition: all 0.2s;
+			margin-top: 10px;
+			cursor: pointer;
+		}
+
+		button:hover {
+			background: #66AD4D;
+		}
+
+		td:first-child {
+			padding-right: 12px;
+		}
+
+		.settings-icon {
+			height: 13px;
+			width: 13px;
+			position: relative;
+			top: 1px;
+			padding-right: 5px;
+		}
+	</style>
+</head>
+
+<body>
+	<h1>NoPluss</h1>
+	<p>NoPluss har fjernet totalt
+		<span class="emph" id="removed"></span> pluss-artikler</p>
+	<h2 style="margin: 30px 0 5px">Statistikk for
+		<span id="currentpage-url"></span>:</h2>
+	<table>
+		<tr>
+			<td>Artikler på siden</td>
+			<td class="emph" id="currentpage-articles"></td>
+		</tr>
+		<tr>
+			<td>Artikler fjernet</td>
+			<td class="emph" id="currentpage-removed"></td>
+		</tr>
+		<tr>
+			<td>Andel artikler bak betalingsmur</td>
+			<td class="emph" id="percentage"></td>
+		</tr>
+	</table>
+
+	<button id="options">
+		<img class="settings-icon" src="settings.svg" />
+		Innstillinger
+	</button>
+
+	<script src="popup.js"></script>
+</body>
+
+</html>
