@@ -62,10 +62,11 @@ const amediaUrls = [
 const currentUrl = window.location.host;
 let plusArticles; // Holds NodeList of articles to be removed from page
 let totalArticles; // Holds total number of articles on page
+let removedArticles = 0;
 
 isDisabled().then(
     res => {
-        if(!res) runNoPluss();
+        if (!res) runNoPluss();
     },
     err => {
         // If we cannot get user settings, run anyway
@@ -74,10 +75,72 @@ isDisabled().then(
 );
 
 function runNoPluss() {
-    if (isAmedia()) {
+    if (isAdressa()) {
+        totalArticles = document.querySelectorAll(".article").length;
+        const plusArticleContainers = document.querySelectorAll(".payed");
+        plusArticleContainers.forEach(item => {
+            if (item.childElementCount === 1) {
+                item.parentNode.removeChild(item);
+                removedArticles++;
+            } else {
+                const spans = item.querySelectorAll("h3.headline > span");
+                const anchorsInsideSpans = item.querySelectorAll("h3.headline > span > a");
+                spans.forEach(span => {
+                    if (
+                        window.getComputedStyle(span, ":after").getPropertyValue("color") ===
+                        "rgb(40, 170, 226)"
+                    ) {
+                        const article = span.closest(".article");
+                        article.parentNode.removeChild(article);
+                        removedArticles++;
+                    }
+                });
+                anchorsInsideSpans.forEach(anchor => {
+                    if (
+                        window.getComputedStyle(anchor, ":after").getPropertyValue("color") ===
+                        "rgb(40, 170, 226)"
+                    ) {
+                        const article = anchor.closest(".article");
+                        article.parentNode.removeChild(article);
+                        removedArticles++;
+                    }
+                });
+            }
+        });
+
+        updateStats();
+    } else if (isVg()) {
+        totalArticles = document.querySelectorAll(".article-content").length;
+        plusArticles = document.querySelectorAll(".df-img-skin-pluss.df-img-container");
+
+        plusArticles.forEach(item => {
+            const article = item.closest(".article-extract");
+            article.parentNode.removeChild(article);
+        });
+        removedArticles = plusArticles.length;
+        updateStats();
+    } else if (isDb()) {
+        totalArticles = document.querySelectorAll("article[id^='article']").length;
+        plusArticles = document.querySelectorAll("article[data-label='pluss']");
+
+        plusArticles.forEach(item => {
+            item.parentNode.removeChild(item);
+        });
+        removedArticles = plusArticles.length;
+        updateStats();
+    } else if (isDn()) {
+        totalArticles = document.querySelectorAll(".df-article").length;
+        plusArticles = document.querySelectorAll(".df-skin-paid");
+
+        plusArticles.forEach(item => {
+            item.parentNode.removeChild(item);
+        });
+        removedArticles = plusArticles.length;
+        updateStats();
+    } else if (isAmedia()) {
         // Amedia articles are loaded async, so we do interval check before manipulating DOM
-        var promise = new Promise(function(resolve, reject) {
-            const checkExist = setInterval(function() {
+        var promise = new Promise((resolve, reject) => {
+            const checkExist = setInterval(() => {
                 if (document.querySelectorAll("amedia-frontpage #front0").length) {
                     clearInterval(checkExist);
                     resolve();
@@ -85,70 +148,39 @@ function runNoPluss() {
             }, 100);
         });
 
-        promise.then(function() {
+        promise.then(() => {
             totalArticles = document.querySelectorAll("optimus-element").length;
             plusArticles = document.querySelectorAll(".premium-logo");
 
-            plusArticles.forEach(function(item) {
+            plusArticles.forEach(item => {
                 const article = item.closest("optimus-element");
                 article.parentNode.removeChild(article);
             });
+            removedArticles = plusArticles.length;
             updateStats();
         });
-    } else if (isVg()) {
-        totalArticles = document.querySelectorAll(".article-content").length;
-        plusArticles = document.querySelectorAll(".df-img-skin-pluss.df-img-container");
-
-        plusArticles.forEach(function(item) {
-            const article = item.closest(".article-extract");
-            article.parentNode.removeChild(article);
-        });
-        updateStats();
-    } else if (isDb()) {
-        totalArticles = document.querySelectorAll("article[id^='article']").length;
-        plusArticles = document.querySelectorAll("article[data-label='pluss']");
-
-        plusArticles.forEach(function(item) {
-            item.parentNode.removeChild(item);
-        });
-        updateStats();
-    } else if (isDn()) {
+    } else if (isAp()) {
         totalArticles = document.querySelectorAll(".df-article").length;
-        plusArticles = document.querySelectorAll(".df-skin-paid");
-
-        plusArticles.forEach(function(item) {
-            item.parentNode.removeChild(item);
+        const all = document.querySelectorAll(".df-img-container-inner");
+        all.forEach(element => {
+            if (
+                window.getComputedStyle(element, ":before").getPropertyValue("content") === "\"For abonnenter\""
+            ) {
+                const article = element.closest(".df-article");
+                article.parentNode.removeChild(article);
+                removedArticles++;
+            }
         });
         updateStats();
-    } else if (isAdressa()) {
-        // const totalArticles = document.querySelectorAll("article[id^='article']");
-        // const plusArticleContainers = document.querySelectorAll(".payed");
-        // plusArticleContainers.forEach(function(item) {
-        //     if (item.childElementCount === 1) {
-        //         item.parentNode.removeChild(item);
-        //     } else {
-        //         const spans = document.querySelectorAll("h3.headline > span");
-        //         console.log(spans.length);
-        //         spans.forEach(function(span) {
-        //             // console.log(span)
-        //         });
-        //         // var color = window
-        //         //     .getComputedStyle(document.querySelector("span"), ":after")
-        //         //     .getPropertyValue("font-weight");
-        //         // console.log(color);
-        //     }
-        // });
-        // updateStats();
     }
 }
 
 function updateStats() {
-    if (totalArticles && plusArticles.length) {
-        console.log("update stats");
-        chrome.storage.sync.get("totalRemoved", function(data) {
+    if (totalArticles && removedArticles) {
+        chrome.storage.sync.get("totalRemoved", data => {
             chrome.storage.sync.set({
-                totalRemoved: data.totalRemoved + plusArticles.length,
-                currentPageRemoved: plusArticles.length,
+                totalRemoved: data.totalRemoved + removedArticles,
+                currentPageRemoved: removedArticles,
                 currentPageTotalArticles: totalArticles,
                 currentPageUrl: currentUrl
             });
@@ -158,7 +190,7 @@ function updateStats() {
 
 function isDisabled() {
     return new Promise((resolve, reject) => {
-        chrome.storage.sync.get("disabledDomains", function(data) {
+        chrome.storage.sync.get("disabledDomains", data => {
             if (chrome.runtime.lastError) {
                 reject("An error occured");
             }
@@ -195,6 +227,10 @@ function isDn() {
 
 function isAdressa() {
     return currentUrl.includes("adressa.no");
+}
+
+function isAp() {
+    return currentUrl.includes("aftenposten.no");
 }
 
 // Make popup available

@@ -17,6 +17,7 @@
         {
             "matches": [
                 "https://*.adressa.no/*",
+                "https://*.aftenposten.no/*",
                 "https://*.amta.no/*",
                 "https://*.an.no/*",
                 "https://*.auraavis.no/*",
