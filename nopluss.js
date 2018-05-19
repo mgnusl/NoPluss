@@ -182,8 +182,13 @@ function updateStats() {
                 totalRemoved: data.totalRemoved + removedArticles,
                 currentPageRemoved: removedArticles,
                 currentPageTotalArticles: totalArticles,
-                currentPageUrl: currentUrl
+                currentPageUrl: currentUrl.replace("www.", "")
             });
+        });
+    } else {
+        chrome.storage.sync.set({
+            currentPageRemoved: 0,
+            currentPageTotalArticles: 0
         });
     }
 }

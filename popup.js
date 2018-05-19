@@ -2,6 +2,7 @@ const totalRemoved = document.getElementById("removed");
 const currentPageRemoved = document.getElementById("currentpage-removed");
 const currentPageArticles = document.getElementById("currentpage-articles");
 const currentPageUrl = document.getElementById("currentpage-url");
+const currentPagePre = document.getElementById("currentpage-pre");
 const currentPageRemovedPercentage = document.getElementById("percentage");
 
 document.getElementById("options").addEventListener("click", function() {
@@ -21,6 +22,7 @@ chrome.storage.sync.get(
     function(data) {
         currentPageRemoved.textContent = data.currentPageRemoved;
         currentPageArticles.textContent = data.currentPageTotalArticles;
+        currentPagePre.textContent = "Statistikk for "
         currentPageUrl.textContent = data.currentPageUrl;
 
         if (data.currentPageRemoved > 0) {
@@ -28,6 +30,8 @@ chrome.storage.sync.get(
                 Math.round(data.currentPageRemoved / data.currentPageTotalArticles * 100) + "%";
         } else {
             currentPageRemovedPercentage.textContent = "-";
+            currentPagePre.textContent = "Ingen plussartikler funnet."
+            currentPageUrl.textContent = ""
         }
     }
 );
