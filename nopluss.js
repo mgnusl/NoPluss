@@ -162,11 +162,36 @@ function runNoPluss() {
     } else if (isAp()) {
         totalArticles = document.querySelectorAll(".df-article").length;
         const all = document.querySelectorAll(".df-img-container-inner");
-        all.forEach(element => {
+        all.forEach(item => {
             if (
-                window.getComputedStyle(element, ":before").getPropertyValue("content") === "\"For abonnenter\""
+                window.getComputedStyle(item, ":before").getPropertyValue("content") ===
+                '"For abonnenter"'
             ) {
-                const article = element.closest(".df-article");
+                const article = item.closest(".df-article");
+                article.parentNode.removeChild(article);
+                removedArticles++;
+            }
+        });
+        updateStats();
+    } else if (isNettavisen()) {
+        console.log("na");
+        totalArticles = document.querySelectorAll(".df-article").length;
+        plusArticles = document.querySelectorAll(".df-skin-napluss");
+        plusArticles.forEach(item => {
+            const article = item.closest(".df-article");
+            article.parentNode.removeChild(article);
+            removedArticles++;
+        });
+        updateStats();
+    } else if (isBt()) {
+        totalArticles = document.querySelectorAll(".df-article").length;
+        const all = document.querySelectorAll(".df-article-footer-inner");
+        all.forEach(item => {
+            if (
+                window.getComputedStyle(item, ":before").getPropertyValue("content") ===
+                '"Abonnent"'
+            ) {
+                const article = item.closest(".df-article");
                 article.parentNode.removeChild(article);
                 removedArticles++;
             }
@@ -236,6 +261,14 @@ function isAdressa() {
 
 function isAp() {
     return currentUrl.includes("aftenposten.no");
+}
+
+function isNettavisen() {
+    return currentUrl.includes("nettavisen.no");
+}
+
+function isBt() {
+    return currentUrl.includes("bt.no");
 }
 
 // Make popup available

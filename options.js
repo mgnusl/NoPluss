@@ -1,4 +1,5 @@
 const availableDomains = [
+    "aftenposten.no",
     "aasavis.no",
     "adressa.no",
     "amta.no",
@@ -116,7 +117,7 @@ function saveOptions() {
         },
         function() {
             const status = document.getElementById("status");
-            status.textContent = "Options saved.";
+            status.textContent = "Innstillinger lagret.";
             setTimeout(() => {
                 status.textContent = "";
             }, 2000);
