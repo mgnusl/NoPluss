@@ -174,7 +174,6 @@ function runNoPluss() {
         });
         updateStats();
     } else if (isNettavisen()) {
-        console.log("na");
         totalArticles = document.querySelectorAll(".df-article").length;
         plusArticles = document.querySelectorAll(".df-skin-napluss");
         plusArticles.forEach(item => {

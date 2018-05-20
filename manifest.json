@@ -1,7 +1,7 @@
 {
-    "name": "Pluss Remover",
+    "name": "NoPluss",
     "version": "0.1",
-    "description": "Remove Pluss articles",
+    "description": "Remove Pluss articles from norwegian newspapers",
     "permissions": ["storage", "declarativeContent", "activeTab", "tabs"],
 
     "background": {
@@ -87,5 +87,10 @@
     ],
 
     "options_page": "options.html",
+    "icons": {
+        "16" : "img/icon16.png",
+        "48" : "img/icon48.png",
+        "128" : "img/icon128.png"
+      },
     "manifest_version": 2
 }

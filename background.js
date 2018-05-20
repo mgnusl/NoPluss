@@ -7,7 +7,7 @@ chrome.runtime.onInstalled.addListener(function () {
         currentPageUrl: null,
         disabledDomains: []
     }, function () {
-        console.log("NOPLUSS LOADED");
+       
     });
 });
 
